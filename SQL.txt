@@ -1,0 +1,193 @@
+-- Database -- 
+
+    -- Schema : blueprint --- it shows the database objects like Tables and 
+                    -- relationshionship between those 
+    -- Tables : Fields (Columns) , Records ( Rows )
+    -- PRIMARY_KEY : the unique not null column that identify a record from another 
+    
+    
+-- SQL Language -- 
+-- DESCRIBING AT ABLE 
+    Describe Employees ; 
+-- GETTING ALL DATA IN ROW 
+    SELECT * 
+    FROM countries; 
+    
+-- GETTING CERTAIN COLUMN 
+    SELECT country_id, country_name
+    FROM COUNTRIES ; 
+    
+-- CONCETENATION USING ||  AND ALIASES USING  AS OR SPACE 
+ SELECT country_id || ' IS ID FOR ' || country_name AS DESCRIPTION 
+    FROM COUNTRIES ; 
+   
+-- RESTRCIT THE RESULT USING WHERE CLAUSE --- IT'S JUST LIKE IF STATEMENT IN JAVA 
+--- USE JOBS TABLE FOR THIS TASK 
+-- FIND OUT THE JOBS THAT HAVE MINUMUM SALARY MORE THAN 10000 
+SELECT * 
+FROM JOBS 
+WHERE min_salary > 10000; 
+-- FIND OUT THE JOBS THAT HAVE MAXIMUM SALARY MORE THAN 15000 
+SELECT job_title AS "RICH GUYS" , mAX_salary AS MONEY
+FROM JOBS 
+WHERE mAX_salary > 15000; 
+-- FIND OUT THE JOBS THAT HAVE MINUMUM SALARY MORE THAN 10000 
+    -- AND MAXIMUM SALARY MORE THAN 15000
+Select JOB_TITLE
+from JOBS
+WHERE MIN_SALARY >10000 AND MAX_SALARY>15000;
+    
+-- FIND OUT THE JOBS TITLE THAT HAVE MINUMUM SALARY BETWEEN 10000 AND  15000
+Select JOB_TITLE
+from JOBS
+WHERE MIN_SALARY BETWEEN 10000 AND 15000;
+--- FIND OUT JOBS THAT HAVE MAX SALARY OF MORE THAN 15000 OR MAX SALARY OF LESS THAN 6000
+SELECT job_title, max_salary 
+from jobs 
+where  max_salary<6000 or max_salary>15000;
+--- FIND OUT THE PRESIDENT'S MAX AND MIN SALARY 
+SELECT *
+from jobs 
+WHERE job_title = 'President' 
+        or job_title = 'Finance Manager' 
+        or  job_title = 'Sales Manager' ; 
+--- IN OPERATOR 
+SELECT *
+from jobs 
+WHERE job_title IN ('President','Finance Manager','Sales Manager') ;
+       
+-- USE LOCATION TABLE FOR THIS TASK
+-- FIND OUT ALL THE INFORMATION ABOUT THE LOCATIONS IN US AND CANADA
+Select * from locations
+where country_id='US' or country_id='CA';
+SELECT *
+from locations
+where country_id in ('US','CA');
+-- USE LOCATION TABLE FOR THIS TASK
+-- FIND OUT ALL THE INFORMATION ABOUT THE LOCATIONS NOT IN US AND CANADA
+SELECT *
+from locations
+where country_id NOT in ('US','CA');
+--- LIKE OPERATOR USING %  FOR PARTIAL STRING SEARCH 
+--- FIND ALL EMPLOYEES THAT HAS NAME START WITH A 
+Select EMPLOYEE_ID , first_name
+from employees
+WHERE first_name LIKE 'A%' ; 
+--- FIND ALL EMPLOYEES THAT HAS NAME END WITH a 
+Select EMPLOYEE_ID , first_name
+from employees
+WHERE first_name LIKE '%a' ; 
+--- FIND ALL EMPLOYEES THAT HAS NAME END WITH ea 
+Select EMPLOYEE_ID , first_name
+from employees
+WHERE first_name LIKE '%ea' ; 
+--- FIND ALL EMPLOYEES THAT HAS ea NAME within the name 
+Select EMPLOYEE_ID , first_name
+from employees
+WHERE first_name LIKE '%ea%' ; 
+--- FIND ALL EMPLOYEES THAT HAS e a NAME within the name at any location 
+Select EMPLOYEE_ID , first_name
+from employees
+WHERE first_name LIKE '%e%a%' ; 
+--- FIND ALL EMPLOYEES THAT HAS NAME DOES NOT START WITH A 
+Select EMPLOYEE_ID , first_name
+from employees
+WHERE first_name NOT LIKE 'A%' ; 
+-------  FINDING OUT UNIQUE VALUES USING DISTINCT KEYWORD 
+Select DISTINCT first_name
+from employees;
+--- FIND OUT ALL DISTINCT SALARY FROM EMPLOYEES 
+Select DISTINCT salary
+from employees;
+
+----- ARITHMATIC OPERATION IN SQL ----  + - * / %  
+SELECT * FROM JOBS  ; 
+
+-- TASK 1 ----  RAISE MINUIMUM SALARY IN JOBS TABLE BY 2000 
+SELECT job_title , MIN_SALARY , MIN_SALARY+10000 AS RAISED_SALARY 
+FROM JOBS ; 
+-- TASK 1 ---- 
+/*
+RAISE MINUIMUM SALARY IN JOBS TABLE BY 2000 
+REDUCE MINUIMUM SALARY IN JOBS TABLE BY 100
+YEARLY MIN_SALARY OF ALL JOBS_TITLE 
+BI-WEEKLY MIN_SALARY OF ALL JOBS TITLE 
+OPTIONALLY , FIND OUT AVERAGE OF MAX AND MIN SALARY 
+*/
+SELECT job_title , MIN_SALARY , MIN_SALARY+2000 AS RAISED_SALARY 
+FROM JOBS ;
+SELECT job_title , MIN_SALARY , MIN_SALARY-1000 AS "PAY CUT" 
+FROM JOBS ;    
+SELECT job_title , MIN_SALARY , MIN_SALARY * 12 AS "YEARLY SALARY " 
+FROM JOBS ;    
+SELECT job_title , MIN_SALARY , MIN_SALARY /2 AS "BI-WEEKLY SALARY " 
+FROM JOBS ;    
+SELECT job_title , MIN_SALARY , MIN_SALARY+2000 AS RAISED_SALARY
+                             ,  MIN_SALARY-100 AS "PAY CUT" 
+                             ,  MIN_SALARY * 12 AS "YEARLY SALARY " 
+                             , MIN_SALARY /2 AS "BI-WEEKLY SALARY " 
+                             , (MIN_SALARY+ MAX_SALARY)/2 AS "AVERAGE MIN_MAX"
+FROM JOBS ;    
+-------------------- ORDERING IN SQL   --- ORDER BY ASC/ DESC
+SELECT * FROM EMPLOYEES 
+ORDER BY first_name ASC; -- OR DESC 
+SELECT * FROM EMPLOYEES 
+ORDER BY  first_name ASC , LAST_NAME DESC; -- OR DESC 
+--- GET ALL EMPLOYEES BY MANAGER ORDER DESC , DEPARTMENT_ID ASC 
+SELECT * FROM EMPLOYEES 
+ORDER BY HIRE_DATE DESC; 
+SELECT * FROM EMPLOYEES 
+ORDER BY 3 DESC; 
+----  WORKING WITH NULL VALUE  ---> IS NULL | IS NOT NULLL 
+--- NULL MEANS EMPTY VALUE 
+SELECT FIRST_NAME , commission_pct FROM EMPLOYEES 
+WHERE commission_pct IS NULL ; 
+SELECT * FROM EMPLOYEES 
+WHERE commission_pct IS NULL ; 
+-- FIND OUT AN EMPLOYEE WITHOUT A MANAGER 
+SELECT * FROM EMPLOYEES 
+WHERE MANAGER_ID IS NULL ; 
+---- NOT NULL IS USED TO GET NON-EMPTY VALUE
+SELECT * FROM EMPLOYEES 
+WHERE commission_pct IS NOT NULL ; 
+---------- WORKING WITH FUNCTIONS--------------
+--- SINGLE ROW FUNCTION 
+    --- IT WILL GO TO EACH AND EVERY ROW AND EXECUTE THE FUNCTION 
+--- UPPER  LOWER  , INITCAP (make first letter upper case the rest lowecase)
+SELECT FIRST_NAME , UPPER(FIRST_NAME) , LOWER(LAST_NAME), EMAIL , INITCAP(EMAIL)
+FROM EMPLOYEES; 
+select first_name from employees
+WHERE LOWER(first_name) = 'ellen' ; 
+select first_name, last_name from employees
+WHERE LOWER(first_name) LIKE  '%a%' 
+ORDER BY first_name
+; 
+--- FIND OUT THE LENGH OF A STRING 
+SELECT FIRST_NAME, LENGTH(first_name) FROM EMPLOYEES ; 
+
+
+--- FIND OUT ALL FIRST NAME HAS LENGTH BETWEEN 4-6
+SELECT FIRST_NAME, LENGTH(first_name) 
+FROM EMPLOYEES 
+WHERE LENGTH(first_name) BETWEEN 4 AND 6 ; 
+SELECT FIRST_NAME, LENGTH(first_name) 
+FROM EMPLOYEES 
+WHERE LENGTH(first_name)  IN (3,4,7) ; 
+
+
+--- A SPECIAL TABLE CALLED DUAL , IT'S A DUMMY TABLE THAT WE CAN QUICKLY TEST OUT EXPRESSIONS  -----
+SELECT 'HELLO WORLD' || + ' , SPARTANS' AS HW FROM DUAL ; 
+SELECT 7 + 29  FROM DUAL ; 
+
+
+--- ROUND , TRUNC , MOD --- 
+
+SELECT  ROUND(8 / 3) ,  TRUNC(8 / 3) , MOD(10, 3) RESULT  FROM DUAL ; 
+
+--- MULTI-ROW FUNCTION --- AGGREGATE FUNCTION 
+    --- IT WILL MANY ROW AND GENERATE AGGREGATED RESULT IN ONE ROW 
+    
+    
+    
+    
+    
