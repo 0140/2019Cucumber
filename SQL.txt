@@ -188,6 +188,153 @@ SELECT  ROUND(8 / 3) ,  TRUNC(8 / 3) , MOD(10, 3) RESULT  FROM DUAL ;
     --- IT WILL MANY ROW AND GENERATE AGGREGATED RESULT IN ONE ROW 
     
     
+    ----------------------------------------new today-------
+------------ 
+select * from employees; 
+​
+--- SINGLE ROW FUNCTIONS --- 
+SELECT FIRST_NAME,LAST_NAME, UPPER(first_name) as uppercase, 
+                    LOWER(first_name) as lowercase, 
+                    LENGTH(first_name) as COUNT , 
+                    email, 
+                    INITCAP(EMAIL)
+FROM EMPLOYEES
+ORDER BY first_name ASC , 2 DESC
+-- ORDERING BY MULTIPLE COLUMN WILL ALWAYS ORDER BY 1st one , 
+-- IF FIRST ONE HAS same data then go for second one
+; 
+​
+​
+---  DUMMY ORACLE TABLE you can use to test out things 
+SELECT 'HELLO WORLD' , 10+10 AS RESULT
+FROM DUAL; 
+​
+​
+SELECT  ROUND(10/3) ROUNDED, TRUNC(10/3) BASE , MOD(10,3) AS REMAINDER
+FROM DUAL; 
+​
+-- TASK 1 -- FIND OUT DAYLY SALARY OF EMPLOYEES WITH NAME 30 
+select first_name||' '||last_name AS "full name" ,ROUND (SALARY/30)
+fROM employees
+ORDER BY first_name ;
+​
+--- MULTI ROW FUNCTION || AGGREGRATE FUNCTION ----- COUNT, AVG , MAX, MIN , SUM 
+SELECT * FROM EMPLOYEES ; 
+​
+​
+--- COUNTING ALL THE ROWS 
+SELECT COUNT(*) , COUNT(first_name)  FROM EMPLOYEES ; 
+​
+--- COUNTING ONLY UNIQUE FIRST NAMES -----
+​
+SELECT  COUNT( DISTINCT FIRST_NAME) as uniqe_Name FROM EMPLOYEES; 
+​
+​
+--- this is bad!!!! SELECT COUNT(FIRST_NAME) , LAST_NAME FROM EMPLOYEES; 
+​
+-- task 2  get the count of everyone in DEPARTMENT 90 : 
+SELECT COUNT(*) as dep90_count  FROM EMPLOYEES 
+where department_id = 90 ; 
+​
+---   AVG 
+​
+SELECT  13.113334 , ROUND(13.113334) AS ROUNDED_NO_DIGIT ,  
+                    ROUND(13.113334  , 3) AS ROUNDED_3_DIGIT
+FROM DUAL ; 
+​
+SELECT AVG(SALARY) AS AVERRAGE_SALARY  , 
+        ROUND( AVG(SALARY) ) AS ROUNDED , 
+        ROUND( AVG(SALARY) , 2 ) AS ROUNDED_2  
+            
+FROM EMPLOYEES; 
+------
+​
+--- FIND OUT EVERYONE MAKES MORE THAN AVERAGE SALARY 
+​
+SELECT AVG(SALARY) AS AVERRAGE_SALARY FROM EMPLOYEES;
+​
+SELECT * FROM EMPLOYEES 
+WHERE SALARY > 6461 ; 
+​
+​
+​
+​
+SELECT          COUNT(*)  AS COUNT, 
+                AVG(SALARY) AS AVERAGE_SALARY,
+                SUM(SALARY) AS SUM_ALL,
+                MAX(SALARY) AS HIGHEST, 
+                MIN(SALARY) AS LOWEST
+FROM EMPLOYEES ; 
+​
+​
+------- GROUPING THE RESULT AND GENERATE OUTPUT 
+--- FIND OUT COUNT OF EMPLOYEES IN EACH DEPARTMENTS 
+​
+--- GROUY BY CLAUSE CAN ONLY BE USED WITH MULTI ROW | AGGREGATE | GROUP FUNCTIONS 
+​
+SELECT DEPARTMENT_ID , COUNT(*)  AS EMP_COUNT
+                    
+FROM EMPLOYEES 
+GROUP BY DEPARTMENT_ID
+;
+​
+--- TASK 3 , FIND OUT MAX SALARY MIN SALARY , AVERAGE SALARY , SUM OF ALL SALARY OF EACH DEPARTMENST 
+SELECT DEPARTMENT_ID , COUNT(*)  AS EMP_COUNT, 
+                        Max(Salary) "Maximum_Salary", 
+                        Min(Salary) "Minimum_Salary",
+                        Round(Avg(Salary)) "Average_Salary"
+                       
+FROM EMPLOYEES 
+GROUP BY DEPARTMENT_ID
+;
+​
+--- HAVING CLAUSE CAN BE USED TO RESTRICT THE GROUPED RESULT AFTER GROUP BY  , 
+--- AND IT CAN BE ONLY USED AFTER GROUP BY 
+​
+SELECT DEPARTMENT_ID , COUNT(*)  AS EmP_COUNt          
+FROM EMPLOYEES 
+GROUP BY DEPARTMENT_ID
+HAVING COUNT(*)  > 10  ; 
+---DML --->> DATA MAIPULATION LANGUAGE ------ SELECT , UPDATE , INSERT , DELETE
+---DDL --->> DATA DEFINITION LANGUEG  ------  CREATE TABLES , DROPPING TABLES AND SO ON .. 
+--- USING ALIAS FOR TABLE 
+--- we use space and the aliases to give nickname for tabel 
+--- this will help to identify column better when we have multiple 
+--- tables with same column name 
+SELECT * FROM employees ; 
+SELECT e.first_name
+FROM  employees e; 
+SELECT * FROM DEPARTMENTS ; 
+SELECT  d.department_name
+from departments d ; 
+SELECT e.first_name , d.department_name
+from Employees e 
+join departments d on e.department_id = d.department_id; 
+---- one table join another table on some common condition 
+--- task 6 -- get country name and region name by joining country and region table 
+SELECT c.country_name , r.region_name
+FROM COUNTRIES c
+join REGIONS r on r.region_id = c.region_id; 
+--- task 7 , find out the name of each Employees in Job history 
+SELECT e.first_name , jh.end_date
+FROM EMPLOYEES e
+JOIN job_history jh on jh.employee_id = e.employee_id ; 
+---- we can join more than 2 tables togeger on top of each other 
+--- GOAL IS TO FIND OUT , ACCORDING TO A LOCATION -->>> COUNTRY NAME --->>> REGION NAME 
+SELECT CITY , c.country_name , c.region_id , r.region_name
+FROM LOCATIONS l
+JOIN countries c on l.country_id = c.country_id
+JOIN regions r on c.region_id = r.region_id
+; 
+--- GOAL IS TO FIND OUT , ACCORDING TO department_id --->>    A LOCATION -->>> COUNTRY NAME --->>> REGION NAME 
+SELECT d.department_name,  l.CITY , c.country_name , c.region_id , r.region_name
+FROM LOCATIONS l
+JOIN departments d on l.location_id = d.location_id
+JOIN countries c on l.country_id = c.country_id
+JOIN regions r on c.region_id = r.region_id;
+
+
+    
     
     
     
