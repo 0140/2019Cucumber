@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------------------------------
 -- Database -- 
 
     -- Schema : blueprint --- it shows the database objects like Tables and 
@@ -187,11 +188,11 @@ SELECT  ROUND(8 / 3) ,  TRUNC(8 / 3) , MOD(10, 3) RESULT  FROM DUAL ;
 --- MULTI-ROW FUNCTION --- AGGREGATE FUNCTION 
     --- IT WILL MANY ROW AND GENERATE AGGREGATED RESULT IN ONE ROW 
     
-    
-    ----------------------------------------new today-------
+----------------------------------------new day 2-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
 ------------ 
 select * from employees; 
-​
+
 --- SINGLE ROW FUNCTIONS --- 
 SELECT FIRST_NAME,LAST_NAME, UPPER(first_name) as uppercase, 
                     LOWER(first_name) as lowercase, 
@@ -203,81 +204,87 @@ ORDER BY first_name ASC , 2 DESC
 -- ORDERING BY MULTIPLE COLUMN WILL ALWAYS ORDER BY 1st one , 
 -- IF FIRST ONE HAS same data then go for second one
 ; 
-​
-​
+
+
+
 ---  DUMMY ORACLE TABLE you can use to test out things 
 SELECT 'HELLO WORLD' , 10+10 AS RESULT
 FROM DUAL; 
-​
-​
+
+
+
 SELECT  ROUND(10/3) ROUNDED, TRUNC(10/3) BASE , MOD(10,3) AS REMAINDER
 FROM DUAL; 
-​
+
+
 -- TASK 1 -- FIND OUT DAYLY SALARY OF EMPLOYEES WITH NAME 30 
 select first_name||' '||last_name AS "full name" ,ROUND (SALARY/30)
 fROM employees
 ORDER BY first_name ;
-​
+
 --- MULTI ROW FUNCTION || AGGREGRATE FUNCTION ----- COUNT, AVG , MAX, MIN , SUM 
 SELECT * FROM EMPLOYEES ; 
-​
-​
+
+
+
 --- COUNTING ALL THE ROWS 
 SELECT COUNT(*) , COUNT(first_name)  FROM EMPLOYEES ; 
-​
+
 --- COUNTING ONLY UNIQUE FIRST NAMES -----
-​
+
 SELECT  COUNT( DISTINCT FIRST_NAME) as uniqe_Name FROM EMPLOYEES; 
-​
-​
+
+
+
 --- this is bad!!!! SELECT COUNT(FIRST_NAME) , LAST_NAME FROM EMPLOYEES; 
-​
+
 -- task 2  get the count of everyone in DEPARTMENT 90 : 
 SELECT COUNT(*) as dep90_count  FROM EMPLOYEES 
 where department_id = 90 ; 
-​
+
 ---   AVG 
-​
+
 SELECT  13.113334 , ROUND(13.113334) AS ROUNDED_NO_DIGIT ,  
                     ROUND(13.113334  , 3) AS ROUNDED_3_DIGIT
 FROM DUAL ; 
-​
+
 SELECT AVG(SALARY) AS AVERRAGE_SALARY  , 
         ROUND( AVG(SALARY) ) AS ROUNDED , 
         ROUND( AVG(SALARY) , 2 ) AS ROUNDED_2  
             
 FROM EMPLOYEES; 
 ------
-​
+
 --- FIND OUT EVERYONE MAKES MORE THAN AVERAGE SALARY 
-​
+
 SELECT AVG(SALARY) AS AVERRAGE_SALARY FROM EMPLOYEES;
-​
+
 SELECT * FROM EMPLOYEES 
 WHERE SALARY > 6461 ; 
-​
-​
-​
-​
+
+
+
+
 SELECT          COUNT(*)  AS COUNT, 
                 AVG(SALARY) AS AVERAGE_SALARY,
                 SUM(SALARY) AS SUM_ALL,
                 MAX(SALARY) AS HIGHEST, 
                 MIN(SALARY) AS LOWEST
 FROM EMPLOYEES ; 
-​
-​
+
+
+
 ------- GROUPING THE RESULT AND GENERATE OUTPUT 
 --- FIND OUT COUNT OF EMPLOYEES IN EACH DEPARTMENTS 
-​
+
 --- GROUY BY CLAUSE CAN ONLY BE USED WITH MULTI ROW | AGGREGATE | GROUP FUNCTIONS 
-​
+
 SELECT DEPARTMENT_ID , COUNT(*)  AS EMP_COUNT
                     
 FROM EMPLOYEES 
 GROUP BY DEPARTMENT_ID
 ;
-​
+
 --- TASK 3 , FIND OUT MAX SALARY MIN SALARY , AVERAGE SALARY , SUM OF ALL SALARY OF EACH DEPARTMENST 
 SELECT DEPARTMENT_ID , COUNT(*)  AS EMP_COUNT, 
                         Max(Salary) "Maximum_Salary", 
@@ -287,20 +294,24 @@ SELECT DEPARTMENT_ID , COUNT(*)  AS EMP_COUNT,
 FROM EMPLOYEES 
 GROUP BY DEPARTMENT_ID
 ;
-​
+
 --- HAVING CLAUSE CAN BE USED TO RESTRICT THE GROUPED RESULT AFTER GROUP BY  , 
 --- AND IT CAN BE ONLY USED AFTER GROUP BY 
-​
+
 SELECT DEPARTMENT_ID , COUNT(*)  AS EmP_COUNt          
 FROM EMPLOYEES 
 GROUP BY DEPARTMENT_ID
 HAVING COUNT(*)  > 10  ; 
+
+
 ---DML --->> DATA MAIPULATION LANGUAGE ------ SELECT , UPDATE , INSERT , DELETE
 ---DDL --->> DATA DEFINITION LANGUEG  ------  CREATE TABLES , DROPPING TABLES AND SO ON .. 
 --- USING ALIAS FOR TABLE 
 --- we use space and the aliases to give nickname for tabel 
 --- this will help to identify column better when we have multiple 
 --- tables with same column name 
+
+
 SELECT * FROM employees ; 
 SELECT e.first_name
 FROM  employees e; 
@@ -331,10 +342,383 @@ SELECT d.department_name,  l.CITY , c.country_name , c.region_id , r.region_name
 FROM LOCATIONS l
 JOIN departments d on l.location_id = d.location_id
 JOIN countries c on l.country_id = c.country_id
-JOIN regions r on c.region_id = r.region_id;
+JOIN regions r on c.region_id = r.region_id
+; 
 
 
+
+
+----------------SQL DAY 3-------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+
+
+--                INNER JOIN VS JOIN 
+-------------->>> THEY ARE SAME THING 
+---------->>> RETURN DATA THAT MATCH FROM BOTH SIDE 
+
+
+--Find out all employees count , by department nam
+
+
+SELECT d.department_name , COUNT(*)
+FROM employees e
+JOIN departments d on e.department_id = d.department_id
+--JOIN jobs j on e.job_id = j.job_id
+GROUP BY d.department_name
+ORDER BY 2 ; 
+
+--- FIND OUT AVERAGE SALARY FOR EACH JOBS TITLE 
+
+
+
+--- FIND OUT DEPARTMENTS COUNT FOR EACH LOCATION BY NAME:  CITY 
+-----  DEPARTMENT TABLE + LOCATION TABLE 
+SELECT COUNT(DEPARTMENT_NAME), l.CITY 
+FROM departments d
+JOIN LOCATIONS l on d.location_id= l.location_id
+GROUP BY l.CITY --- this is the only column can show up in select statement
+
+
+; 
+
+
+--- FIND OUT DEPARTMENTS COUNT FOR EACH LOCATION BY NAME:  CITY 
+----- restrict the result for city name start with S
+-----  DEPARTMENT TABLE + LOCATION TABLE 
+SELECT COUNT(DEPARTMENT_NAME), l.CITY 
+FROM departments d
+JOIN LOCATIONS l on d.location_id= l.location_id
+--WHERE l.city LIKE 'S%'
+GROUP BY l.CITY --- this is the only column can show up in select statement
+HAVING l.city LIKE 'S%'
+; 
+
+--- FIND OUT DEPARTMENTS COUNT FOR EACH LOCATION BY NAME:  CITY 
+----- restrict the result for DEPARTMENT COUNT MORE THAN 2 
+-----  DEPARTMENT TABLE + LOCATION TABLE 
+SELECT COUNT(DEPARTMENT_NAME), l.CITY 
+FROM departments d
+JOIN LOCATIONS l on d.location_id= l.location_id
+--WHERE COUNT(DEPARTMENT_NAME)>2  --->> DO NOT USE AGGREGATE FUNCTION WITH WHERE CLAUSE
+GROUP BY l.CITY --- this is the only column can show up in select statement
+HAVING COUNT(DEPARTMENT_NAME)>2
+; 
+
+
+
+---- INNTER JOIN --->> JOIN 
+    -- MATCHING PART FROM BOTH TABLE , ELIMINATE NO MATCH 
+   
+  --- FIND OUT MANAGER'S NAME OF EACH DEPARTMENT 
+    --- return 2 column  MANAGER_NAME , DEPARTMENT_NAME
+    
+    --- I HAVE BUNCH OF PEOPLE WHO ARE MANAGERS , I ONLY HAVE THEIR ID 
+    --- I WANNA KNOW THEIR NAME , AND THE NAME COME FROM EMPLOYEE TABLE 
+    --- I LOOK UP THE NAME BY LOOKING AT EMPLOYEE_ID  
+    
+    SELECT d.department_name , d.manager_id , e.first_name
+    FROM departments d 
+    join employees e on d.manager_id = e.employee_id
+    ; 
+
+--- JOIN = INNER JOIN 
+--- RIGHT JOIN =  RIGHT OUTER JOIN 
+--  LEFT JOIN = LEFT OUTER JOIN 
+--- FULL JOIN = FULL OUTER JOIN 
+
+--- HOW DO I KNOW WHICH TABLE IS RIGHT WHICH TABLE IS LEFT 
+--- FIRST COME FIRST SERVE :  FIRST ONE IS LEFT , SECOND ONE IS RIGHT 
+--- 
+
+
+--- RIGHT (OUTER) JOIN 
+     -- RETURN EVERYTHING PART FROM RIGHT TABLE AND ONLY MATCHING PART FROM LEFT TABLE
+    
+    --- WE GOT ONLY MATCHING DEPARTMENTS NAME 
+    --- AND WE GOT ALL MATCHING AND NOT-MATCHING NAMES FROM EMPLOYESS
+    --- FOR NON-MATCHING DEPARTMENTS WE GOT NULL CELLS 
+    SELECT d.department_name , d.manager_id , e.first_name
+    FROM departments d RIGHT join employees e 
+                     on d.manager_id = e.employee_id
+    ; 
+    --- WITH ABOVE QUERY , RETURN PEOPLE ARE NOT DEPARTMENT MANAGER 
+    SELECT d.department_name , d.manager_id , e.first_name
+    FROM departments d RIGHT join employees e 
+                     on d.manager_id = e.employee_id
+    where d.manager_id is null ; 
+    
+    
+
+--- LEFT (OUTER) JOIN 
+     -- RETURN EVERYTHING PART FROM LEFT TABLE AND ONLY MATCHING PART FROM RIGHT TABLE
+    SELECT d.department_name , d.manager_id , e.first_name
+    FROM departments d LEFT OUTER join employees e 
+                     on d.manager_id = e.employee_id ; 
+
+--- GET THOSE DEPARTMENTS THAT DOES NOT HAVE MANAGERS 
+    SELECT d.department_name , d.manager_id , e.first_name
+    FROM departments d LEFT OUTER join employees e 
+                     on d.manager_id = e.employee_id 
+                     WHERE d.manager_id is null
+                     ; 
+
+
+
+-- FULL OUTER JOIN 
+     -- RETURN MATCHING PART FROM BOTH TABLE + UNMACHING PART TOGETHER
+    SELECT d.department_name , d.manager_id , e.first_name
+    FROM departments d full OUTER join employees e 
+                     on d.manager_id = e.employee_id
+          ; 
+          
+--- SELF JOIN --->> JOINING A TABLE TO ITSELF 
+--- FIND OUT ALL EMPLOYEES THAT REPORT TO A GUY WITH ID OF 100 ---
+SELECT COUNT(*) FROM EMPLOYEES 
+WHERE manager_id = 100 ; 
+
+
+
+SELECT * FROM EMPLOYEES 
+; 
+
+
+
+--- USE THIS TO GERATE SENTENCE LIKE BELOW 
+-- William	report to Gerald
+--SELECT  emp.first_name as EMP_NAME , mng.first_name AS MNG_NAME
+SELECT emp.first_name ||' REPORTS TO '|| MNG.first_name
+FROM EMPLOYEES emp 
+LEFT join EMPLOYEES mng on emp.manager_id = mng.employee_id;
+
+
+
+SELECT
+    first_name,
+    job_title
+FROM
+    employees
+    --JOIN jobs ON jobs.job_id = employees.job_id
+    JOIN jobs USING(JOB_ID) ; 
+    -- IF YOU HAVE SAME COLUMN NAME IN 2 TABLES THAT YOU ARE JOINING 
+    --- YOU CAN USE USING(JOINING COLUNM) to make it shorter 
+    
+    --- THIS CAN BE ONLY USED 
+    --  IF YOU HAVE SAME COLUMN NAME IN 2 TABLES THAT YOU ARE JOINING 
     
     
     
-    
+--- sub query
+SELECT FIRST_NAME , SALARY
+FROM EMPLOYEES
+WHERE SALARY = 24000
+; 
+SELECT  MAX(SALARY) FROM EMPLOYEES ; 
+
+--- SUB QUERY IS A QUERY INSIDE ANOTHER QUERY --- 
+SELECT FIRST_NAME , SALARY
+FROM EMPLOYEES
+WHERE SALARY = ( SELECT  MAX(SALARY) FROM EMPLOYEES   )
+; 
+
+--- FIND OUT ALL EMPLOYEES WHO MAKE MORE THAN AVERAGE SALARY
+
+SELECT  AVG(SALARY) FROM EMPLOYEES ; 
+
+SELECT FIRST_NAME , SALARY
+FROM EMPLOYEES
+WHERE SALARY > 6461
+ORDER BY 1 
+; 
+
+SELECT FIRST_NAME , SALARY
+FROM EMPLOYEES
+WHERE SALARY > (SELECT  AVG(SALARY) FROM EMPLOYEES )
+
+;
+
+--- TASK -- 
+SELECT FIRST_NAME , DEPARTMENT_ID 
+FROM EMPLOYEES 
+WHERE employee_id IN (200,201,114,203 , 121 ,103,204,145,100,108,205 ); 
+
+
+select  manager_id from departments where manager_id is not null; 
+
+SELECT FIRST_NAME , DEPARTMENT_ID 
+FROM EMPLOYEES 
+WHERE employee_id IN (select  manager_id from departments where manager_id is not null ); 
+
+
+
+--- select * from some table 
+--- select * from (result of some sub query as a table)
+
+SELECT * FROM 
+            (
+            SELECT FIRST_NAME , SALARY
+            FROM EMPLOYEES
+            WHERE SALARY > 6461 
+            ) MORE_THAN_AVG
+; 
+
+---- limiting the result by column name 
+
+SELECT * FROM (
+                SELECT FIRST_NAME , ROWNUM AS MY_ROW 
+                FROM EMPLOYEES 
+            ) 
+WHERE MY_ROW = 6 
+; 
+
+
+
+--- set operator --- ddl 
+--- union , union all , minus , intersect 
+
+SELECT FIRST_NAME , SALARY 
+FROM EMPLOYEES 
+WHERE SALARY > 12000
+--- ABOVE QUERY WILL RETURN 8 VALUE 
+UNION ALL
+
+SELECT FIRST_NAME , SALARY 
+FROM EMPLOYEES 
+WHERE SALARY BETWEEN 11000 AND 15000
+--- ABOVE QUERY WILL RETURN 10 VALUE  AND HAS DUPLICATE
+; 
+
+
+
+SELECT FIRST_NAME , SALARY 
+FROM EMPLOYEES 
+WHERE SALARY > 12000
+-- RETURN 8 VALUE
+UNION 
+
+SELECT FIRST_NAME , SALARY 
+FROM EMPLOYEES 
+WHERE SALARY BETWEEN 11000 AND 15000
+-- THIS RETURN 10 VALUE AND 5 OF THEM ARE DUPLICATE SO THE RESULT IS 15
+; 
+
+SELECT FIRST_NAME , SALARY 
+FROM EMPLOYEES 
+WHERE SALARY > 12000
+-- RETURN 8 VALUE
+MINUS 
+
+SELECT FIRST_NAME , SALARY 
+FROM EMPLOYEES 
+WHERE SALARY BETWEEN 11000 AND 15000
+-- THIS RETURN 10 VALUE AND 5 OF THEM ARE DUPLICATE 
+; 
+
+SELECT FIRST_NAME , SALARY 
+FROM EMPLOYEES 
+WHERE SALARY > 12000
+-- RETURN 8 VALUE
+INTERSECT 
+
+SELECT FIRST_NAME , SALARY 
+FROM EMPLOYEES 
+WHERE SALARY BETWEEN 11000 AND 15000
+-- THIS RETURN 10 VALUE AND 5 OF THEM ARE DUPLICATE 
+; 
+---  IMAGIVE YOU HAVE 2 TABLE WITH ONLY ONE COLUMN 
+        --A                 B 
+--- 10,9,8,7,6,5  MINUS  7,8,9    --->> 10,6,5
+--- 10,9,8,7,6,5  UNION ALL  7,8,9    --->> 10,9,8,7,6,5,7,8,9  
+--- 10,9,8,7,6,5  UNION  7,8,9    --->> 5,6,7,8,9,10
+--- 10,9,8,7,6,5  INTERSECT  7,8,9    --->> 7,8,9
+
+
+
+----->> SELECT 
+/*  TYPE OF COMMANDS : 
+DML   --- DATA MANIPULATION LANGUAGE : 
+CREATE(INSERT) , READ(SELECT) , UPDATE , DELETE   : CRUD OPERATION 
+
+DDL  ----- DATA DEFINITION LANGUAGE  : 
+            CREATE TABLE , ALTER TABLE , DROP , TRUNCATE ........
+
+DCL  ----- DATA CONTROL LANGUAGE 
+           GRANT (ACCESSS ..) USER (PRIVILIGE) , REVOKE 
+           
+TCL  ----  TRANSACTION CONTROL LANGUAGE
+          COMMIT , ROLLBACK , SAVEPOINT
+
+*/
+
+DROP TABLE SPARTAN; 
+
+
+CREATE TABLE SPARTAN 
+(
+  ID NUMBER NOT NULL 
+, NAME VARCHAR2(20 BYTE) NOT NULL 
+, OFFER_COUNT NUMBER 
+, BATCH NUMBER NOT NULL 
+) 
+
+SELECT * FROM SPARTAN; 
+ 
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (1, 'Lorene', 46, 11);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (2, 'Westleigh', 13, 12);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (3, 'Ambrosi', 42, 12);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (4, 'Stephie', 10, 14);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (5, 'Angel', 4, 11);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (6, 'Fabien', 5, 11);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (7, 'Flory', 83, 13);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (8, 'Cherlyn', 75, 11);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (9, 'Benedetta', 29, 10);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (10, 'Adeline', 79, 13);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (11, 'Marilee', 10, 12);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (12, 'Miguelita', 87, 10);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (13, 'Valentia', 6, 10);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (14, 'Candi', 37, 10);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (15, 'Ulises', 37, 11);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (16, 'Ilene', 98, 14);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (17, 'Chrissie', 1, 10);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (18, 'Torrie', 90, 12);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (19, 'Esdras', 62, 14);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (20, 'Dagmar', 84, 12);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (21, 'Lorens', 82, 10);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (22, 'Chick', 6, 14);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (23, 'Sibella', 53, 13);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (24, 'Philipa', 65, 14);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (25, 'Kati', 91, 13);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (26, 'Rees', 91, 13);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (27, 'Yulma', 50, 14);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (28, 'Tadd', 94, 13);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (29, 'Way', 14, 12);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (30, 'Ronni', 81, 11);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (31, 'Kali', 38, 14);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (32, 'Ronald', 31, 14);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (33, 'Marsh', 33, 12);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (34, 'Trumann', 9, 12);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (35, 'Zacharia', 59, 11);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (36, 'Wilek', 32, 14);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (37, 'Joellyn', 2, 10);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (38, 'Lorry', 50, 13);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (39, 'Jerrie', 12, 13);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (40, 'Nikolos', 17, 14);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (41, 'Perl', 52, 14);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (42, 'Aldric', 80, 11);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (43, 'Rhea', 67, 13);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (44, 'Torrance', 52, 10);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (45, 'Gwenette', 68, 11);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (46, 'Emelen', 53, 13);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (47, 'Thadeus', 40, 14);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (48, 'Leicester', 55, 11);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (49, 'Joann', 62, 11);
+insert into SPARTAN (id, NAME, OFFER_COUNT, BATCH) values (50, 'Aeriel', 54, 12);
+
+
+DELETE FROM SPARTAN 
+WHERE ID = 50 ; 
+
+
+UPDATE SPARTAN
+  SET offer_count = 20
+  WHERE ID = 49 ; 
+
