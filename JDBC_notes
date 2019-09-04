@@ -1,36 +1,31 @@
-​
 How do you connect to database using Java ? 
-​
-​
 We use JDBC API comes with JDK  
 In order to connect to a specific Relational Database management system , we need to have a driver of that database vendor like oracle, mysql , postgress , MariaDB .,.,........
-​
 what is a JDBC driver : It's a jar file that contains packages and classes and it has implementation of JDBC standard 
-​
 There are 3 major interface that used to programatically access database 
-​
-​
 ---  all these interfaces are coming from 
    java.sql package 
-​
 Connection ,
-	 we use DriverManager and connection String , database credentials to make connection 
-​
-	Connection conn = DriverManager.getConnection(connection_str,db_user,db_password);
-​
+     we use DriverManager and connection String , database credentials to make connection 
+    Connection conn = DriverManager.getConnection(connection_str,db_user,db_password);
 Statement , 
-	 we can create statement object using connection object, it has ability to executeQuery
-​
-	  Statement stmt = conn.createStatement();
-​
+     we can create statement object using connection object, it has ability to executeQuery
+      Statement stmt = conn.createStatement();
 ResultSet 
-	 Once statement object query is executed , it will result in a ResultSet object that store entire result, 
-​
-	 ResultSet rs = stmt.executeQuery("SELECT * FROM REGIONS");
-	 rs.next()  to move to first row 
-​
+     Once statement object query is executed , it will result in a ResultSet object that store entire result, 
+     ResultSet rs = stmt.executeQuery("SELECT * FROM REGIONS");
+     rs.next()  to move to first row 
 Eech resultset can contain 1 result of the query run 
 if you want to run another sql query ,create another ResultSet Object 
-​
-​
-​
+ResultSet object has few usueful methods to move your cursor around , so we can get correct data from the row we are interested in 
+    -- by default your cursor is at beforeFirst location 
+rs.next()   move cursort to next location 
+rs.previous(); move cursor to previous location 
+    -- ResultSet must be TYPE_SCROLL_INSENSITIVE 
+rs.absolute(2); move cursor to specific row 
+rs.first(); // move the cursor to first row
+rs.last(); // move the cursor to last row
+rs.beforeFirst(); // move the cursor to the location right before first row
+rs.afterLast(); // move the cursor to the location right after last row
+How do we read data by column name regardless of data type : 
+        rs.getObject("column_name_here") ; 
