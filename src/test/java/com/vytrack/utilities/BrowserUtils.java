@@ -325,20 +325,19 @@ public class BrowserUtils {
      * @param element
      */
     public static void waitForStaleElement(WebElement element) {
-        int y = 0;
-        while (y <= 15) {
+        int attempts = 0;
+        while (attempts <= 15) {
             try {
                 element.isDisplayed();
-                break;
+                return;
             } catch (StaleElementReferenceException st) {
-                y++;
+                attempts++;
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
             }
-            break;
         }
     }
 
