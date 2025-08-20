@@ -381,7 +381,7 @@ public class BrowserUtils {
     }
 
     /**
-     * Highlighs an element by changing its background and border color
+     * Highlights an element by changing its background and border color
      *
      * @param element
      */
